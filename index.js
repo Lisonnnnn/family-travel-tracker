@@ -96,23 +96,30 @@ app.post("/add", async (req, res) => {
   }
 });
 app.post("/user", async (req, res) => {
-  currentUserId=parseInt(req.body["user"]);
-  console.log(currentUserId);
-  const countries=await checkVisisted();
-  const currentUser=await getCurrentUser();
-  res.render("index.ejs",{
-    countries: countries,
-    total: countries.length,
-    users: users,
-    color: currentUser.color,
+  if(req.body.add==="new")
+  {
+    res.render("new.ejs");
 
-  });
+  }
+  else {
+    currentUserId = req.body.user;
+    res.redirect("/");
+  }
 
 
 
 });
 
 app.post("/new", async (req, res) => {
+  const name=req.body["name"];
+  const color=req.body["color"];
+  const result=await db.query("insert into users (name,color) values($1,$2) ",[name,color]);
+   currentUserId=parseInt((await db.query("select id from users where name=$1",[name])).rows[0].id);
+
+ 
+ 
+  res.redirect("/");
+  
   
 });
 
