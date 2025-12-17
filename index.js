@@ -71,17 +71,49 @@ app.post("/add", async (req, res) => {
       );
       res.redirect("/");
     } catch (err) {
-      console.log(err);
+     const countries = await checkVisisted();
+  const currentUser=await getCurrentUser();
+  res.render("index.ejs", {
+    countries: countries,
+    total: countries.length,
+    users: users,
+    color: currentUser.color,
+    error:"Country has already been added, try again."
+  });
+
     }
   } catch (err) {
+    const countries = await checkVisisted();
+  const currentUser=await getCurrentUser();
     console.log(err);
+    res.render("index.ejs", {
+    countries: countries,
+    total: countries.length,
+    users: users,
+    color: currentUser.color,
+    error: "Country name does not exist, try again.",
+  });
   }
 });
-app.post("/user", async (req, res) => {});
+app.post("/user", async (req, res) => {
+  currentUserId=parseInt(req.body["user"]);
+  console.log(currentUserId);
+  const countries=await checkVisisted();
+  const currentUser=await getCurrentUser();
+  res.render("index.ejs",{
+    countries: countries,
+    total: countries.length,
+    users: users,
+    color: currentUser.color,
+
+  });
+
+
+
+});
 
 app.post("/new", async (req, res) => {
-  //Hint: The RETURNING keyword can return the data that was inserted.
-  //https://www.postgresql.org/docs/current/dml-returning.html
+  
 });
 
 app.listen(port, () => {
